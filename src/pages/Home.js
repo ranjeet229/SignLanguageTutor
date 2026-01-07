@@ -1,10 +1,14 @@
 import React from "react";
+import WebcamFeed from "../components/WebcamFeed";
 
 const Home = () => {
   return (
     <div>
-      <h1>Sign Language Tutor</h1>
-      <p>Learn sign language using AI </p>
+      <h1 style={{ textAlign: "center" }}>
+        Sign Language Tutor 
+      </h1>
+
+      <WebcamFeed />
     </div>
   );
 };
