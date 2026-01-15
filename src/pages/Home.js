@@ -4,7 +4,7 @@ import WebcamFeed from "../components/WebcamFeed";
 const Home = () => {
   return (
     <div>
-      {/* Title */}
+    
       <h1
         style={{
           textAlign: "center",
@@ -19,7 +19,7 @@ const Home = () => {
         Sign Language Tutor
       </h1>
 
-      {/* Description */}
+      
       <p
         style={{
           textAlign: "center",
@@ -32,11 +32,11 @@ const Home = () => {
           lineHeight: "1.6",
         }}
       >
-        
+
         Show the correct hand gesture and get instant feedback in real time.
       </p>
 
-      {/* Webcam (UNCHANGED) */}
+
       <WebcamFeed />
     </div>
   );
