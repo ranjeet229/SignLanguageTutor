@@ -14,7 +14,6 @@ const WebcamFeed = () => {
   const [currentLetter, setCurrentLetter] = useState("A");
   const [isCorrect, setIsCorrect] = useState(null);
 
-  // Load AI model & start detection loop
   useEffect(() => {
     loadHandposeModel();
 
@@ -25,7 +24,6 @@ const WebcamFeed = () => {
     return () => clearInterval(interval);
   }, [currentLetter]);
 
-  // Auto move to next letter when correct
   useEffect(() => {
     if (isCorrect === true) {
       const timeout = setTimeout(() => {
@@ -44,7 +42,6 @@ const WebcamFeed = () => {
     }
   }, [isCorrect, currentLetter]);
 
-  // Main detection logic
   const runHandDetection = async () => {
     if (webcamRef.current && webcamRef.current.video) {
       const video = webcamRef.current.video;
@@ -63,12 +60,12 @@ const WebcamFeed = () => {
 
   return (
     <>
-      {/* Target Letter */}
+     
       <h2 style={{ textAlign: "center" }}>
         Show Letter: <span>{currentLetter}</span>
       </h2>
 
-      {/* Feedback */}
+   
       {isCorrect !== null && (
         <h3
           style={{
@@ -80,7 +77,7 @@ const WebcamFeed = () => {
         </h3>
       )}
 
-      {/* Webcam + Canvas */}
+    
       <div
         style={{
           position: "relative",

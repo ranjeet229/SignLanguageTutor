@@ -1,5 +1,24 @@
-body {
+/* Global Reset */
+* {
+
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #f4f4f4;
+
+}
+
+/* Page Background */
+body {
+  font-family: "Poppins", "Segoe UI", sans-serif;
+  background: linear-gradient(
+    135deg,
+    #0f2027,
+    #203a43,
+    #2c5364
+  );
+  min-height: 100vh;
+  color: #ffffff;
+}
+
+/* Smooth text */
+h1, h2, h3 {
+  letter-spacing: 0.5px;
 }

@@ -13,7 +13,6 @@ const HandCanvas = ({ predictions }) => {
       predictions.forEach((prediction) => {
         const landmarks = prediction.landmarks;
 
-        // Draw points
         for (let i = 0; i < landmarks.length; i++) {
           const [x, y] = landmarks[i];
           ctx.beginPath();
