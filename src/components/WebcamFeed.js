@@ -4,9 +4,6 @@ import { loadHandposeModel, detectHand } from "../ai/handposeModel";
 import HandCanvas from "./HandCanvas";
 import { detectLetter } from "../utils/gestureLogic";
 
-const WIDTH = 640;
-const HEIGHT = 480;
-
 const WebcamFeed = () => {
   const webcamRef = useRef(null);
 
@@ -17,40 +14,29 @@ const WebcamFeed = () => {
   useEffect(() => {
     loadHandposeModel();
 
-    const interval = setInterval(() => {
-      runHandDetection();
-    }, 100);
-
+    const interval = setInterval(runHandDetection, 120);
     return () => clearInterval(interval);
   }, [currentLetter]);
 
   useEffect(() => {
     if (isCorrect === true) {
       const timeout = setTimeout(() => {
-        const nextChar = String.fromCharCode(
-          currentLetter.charCodeAt(0) + 1
-        );
-
-        if (nextChar <= "Z") {
-          setCurrentLetter(nextChar);
-        }
-
+        const nextChar = String.fromCharCode(currentLetter.charCodeAt(0) + 1);
+        if (nextChar <= "Z") setCurrentLetter(nextChar);
         setIsCorrect(null);
-      }, 1000);
+      }, 900);
 
       return () => clearTimeout(timeout);
     }
   }, [isCorrect, currentLetter]);
 
   const runHandDetection = async () => {
-    if (webcamRef.current && webcamRef.current.video) {
-      const video = webcamRef.current.video;
-      const hands = await detectHand(video);
+    if (webcamRef.current?.video) {
+      const hands = await detectHand(webcamRef.current.video);
       setPredictions(hands);
 
       if (hands.length > 0) {
-        const landmarks = hands[0].landmarks;
-        const result = detectLetter(landmarks, currentLetter);
+        const result = detectLetter(hands[0].landmarks, currentLetter);
         setIsCorrect(result);
       } else {
         setIsCorrect(null);
@@ -59,17 +45,27 @@ const WebcamFeed = () => {
   };
 
   return (
-    <>
-     
-      <h2 style={{ textAlign: "center" }}>
+    <div
+      style={{
+        flex: 1,
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}
+    >
+      {/* Letter prompt */}
+      <h2 style={{ margin: "4px 0" }}>
         Show Letter: <span>{currentLetter}</span>
       </h2>
 
-   
+      {/* Feedback */}
       {isCorrect !== null && (
         <h3
           style={{
-            textAlign: "center",
+            margin: "4px 0",
             color: isCorrect ? "green" : "red",
           }}
         >
@@ -77,40 +73,39 @@ const WebcamFeed = () => {
         </h3>
       )}
 
-    
+      {/* Webcam Container */}
       <div
         style={{
           position: "relative",
-          width: WIDTH,
-          height: HEIGHT,
-          margin: "0 auto",
+          width: "100%",
+          maxWidth: "600px",
+          aspectRatio: "4 / 3",
           border:
             isCorrect === null
-              ? "4px solid black"
+              ? "3px solid black"
               : isCorrect
-              ? "4px solid green"
-              : "4px solid red",
+                ? "3px solid green"
+                : "3px solid red",
+          borderRadius: "10px",
+          overflow: "hidden",
         }}
       >
         <Webcam
           ref={webcamRef}
           audio={false}
-          mirrored={true}
+          mirrored
           style={{
-            width: WIDTH,
-            height: HEIGHT,
+            width: "100%",
+            height: "100%",
             position: "absolute",
+            objectFit: "cover",
             zIndex: 1,
           }}
         />
 
-        <HandCanvas
-          predictions={predictions}
-          width={WIDTH}
-          height={HEIGHT}
-        />
+        <HandCanvas predictions={predictions} width={520} height={390} />
       </div>
-    </>
+    </div>
   );
 };
 
