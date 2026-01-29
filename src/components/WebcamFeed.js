@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import { loadHandposeModel, detectHand } from "../ai/handposeModel";
 import HandCanvas from "./HandCanvas";
@@ -11,12 +11,26 @@ const WebcamFeed = () => {
   const [currentLetter, setCurrentLetter] = useState("A");
   const [isCorrect, setIsCorrect] = useState(null);
 
+  const runHandDetection = useCallback(async () => {
+    if (webcamRef.current?.video) {
+      const hands = await detectHand(webcamRef.current.video);
+      setPredictions(hands);
+
+      if (hands.length > 0) {
+        const result = detectLetter(hands[0].landmarks, currentLetter);
+        setIsCorrect(result);
+      } else {
+        setIsCorrect(null);
+      }
+    }
+  }, [currentLetter]);
+
   useEffect(() => {
     loadHandposeModel();
 
     const interval = setInterval(runHandDetection, 120);
     return () => clearInterval(interval);
-  }, [currentLetter]);
+  }, [runHandDetection]);
 
   useEffect(() => {
     if (isCorrect === true) {
@@ -29,20 +43,6 @@ const WebcamFeed = () => {
       return () => clearTimeout(timeout);
     }
   }, [isCorrect, currentLetter]);
-
-  const runHandDetection = async () => {
-    if (webcamRef.current?.video) {
-      const hands = await detectHand(webcamRef.current.video);
-      setPredictions(hands);
-
-      if (hands.length > 0) {
-        const result = detectLetter(hands[0].landmarks, currentLetter);
-        setIsCorrect(result);
-      } else {
-        setIsCorrect(null);
-      }
-    }
-  };
 
   return (
     <div
